@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kcal Limit Calculator</title>
+    <title>Kcal & Protein Limit Calculator</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -22,25 +22,25 @@
             transition: all 0.2s ease-in-out;
         }
         .premium-input:focus {
-            /* Focus color shifted to a vivid, contrasting orange */
-            border-color: #f97316; /* Orange-600 focus ring */
-            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.4);
+            /* Focus color shifted to match the bright emerald accent */
+            border-color: #34d399; /* Emerald-400 focus ring */
+            box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.4);
             outline: none;
         }
     </style>
 </head>
-<!-- Background: Vibrant Orange (bg-orange-400) -->
-<body class="bg-orange-400 min-h-screen flex items-center justify-center p-4 font-sans">
+<!-- Background: Vibrant Orange (bg-orange-600) to match the image -->
+<body class="bg-orange-600 min-h-screen flex items-center justify-center p-4 font-sans">
 
-    <!-- Card: Deep Cyan/Teal (bg-cyan-900) - Complementary and Strong Formal -->
+    <!-- Card: Deep Cyan Blue (bg-cyan-900) to match the image -->
     <div id="calculator-card" class="calculator-card bg-cyan-900 rounded-3xl w-full max-w-md p-7 sm:p-10">
 
         <!-- Heading: White and Formal -->
         <h1 class="text-4xl font-extrabold text-white mb-2 text-center tracking-tight">
-            Food Calorie Limit
+            Food Nutrition Calculator
         </h1>
         <p class="text-sm font-semibold text-cyan-300 mb-8 text-center">
-            Daily Portion Calculator
+            Daily Portion & Nutrient Breakdown
         </p>
 
         <!-- Input Fields Container -->
@@ -59,10 +59,31 @@
                         value="550"
                         min="0"
                         class="premium-input w-full p-4 pr-16 text-lg rounded-xl text-gray-800 placeholder-gray-400"
-                        oninput="calculateCalories()"
+                        oninput="calculateNutrition()"
                     >
                     <span class="absolute right-0 top-0 h-full flex items-center pr-4 text-gray-500 text-sm font-medium">
                         Kcal/100g
+                    </span>
+                </div>
+            </div>
+
+            <!-- NEW: Protein per 100g Input -->
+            <div>
+                <label for="proteinPer100g" class="block text-sm font-semibold text-gray-100 mb-2">
+                    Protein per 100g (g)
+                </label>
+                <div class="relative">
+                    <input 
+                        type="number" 
+                        id="proteinPer100g" 
+                        placeholder="e.g., 25"
+                        value="25"
+                        min="0"
+                        class="premium-input w-full p-4 pr-16 text-lg rounded-xl text-gray-800 placeholder-gray-400"
+                        oninput="calculateNutrition()"
+                    >
+                    <span class="absolute right-0 top-0 h-full flex items-center pr-4 text-gray-500 text-sm font-medium">
+                        grams (g)
                     </span>
                 </div>
             </div>
@@ -80,7 +101,7 @@
                         value="30"
                         min="0"
                         class="premium-input w-full p-4 pr-16 text-lg rounded-xl text-gray-800 placeholder-gray-400"
-                        oninput="calculateCalories()"
+                        oninput="calculateNutrition()"
                     >
                     <span class="absolute right-0 top-0 h-full flex items-center pr-4 text-gray-500 text-sm font-medium">
                         grams (g)
@@ -93,62 +114,84 @@
         <!-- Output Field Container -->
         <div class="mt-10">
             <h2 class="text-xl font-semibold text-gray-200 mb-3 border-t border-cyan-700 pt-6">
-                Result
+                Nutrition Breakdown
             </h2>
             
-            <!-- Result Display: White background for clarity on dark card -->
-            <div class="bg-white p-6 rounded-xl flex flex-col items-center justify-center border border-cyan-700">
-                <span class="text-sm font-semibold text-gray-600 mb-2">
-                    Total Estimated Calories
-                </span>
-                <!-- Result: Pure White (text-white) on Cyan-900 background -->
-                <span id="outputCalories" class="text-5xl font-extrabold text-white bg-cyan-900 px-4 py-2 rounded-lg">
-                    0
-                </span>
+            <!-- Output Grid -->
+            <div class="grid grid-cols-2 gap-4">
+                
+                <!-- Output 1: Calories -->
+                <div class="bg-white p-4 rounded-xl flex flex-col items-center justify-center border border-cyan-700">
+                    <span class="text-xs font-semibold text-gray-600 mb-1">
+                        Estimated Calories
+                    </span>
+                    <!-- Result: Bright Emerald Green/Teal -->
+                    <span id="outputCalories" class="text-3xl sm:text-4xl font-extrabold text-emerald-400">
+                        0
+                    </span>
+                </div>
+
+                <!-- NEW Output 2: Protein -->
+                <div class="bg-white p-4 rounded-xl flex flex-col items-center justify-center border border-cyan-700">
+                    <span class="text-xs font-semibold text-gray-600 mb-1">
+                        Estimated Protein (g)
+                    </span>
+                    <!-- Result: Bright Emerald Green/Teal -->
+                    <span id="outputProtein" class="text-3xl sm:text-4xl font-extrabold text-emerald-400">
+                        0
+                    </span>
+                </div>
             </div>
 
             <!-- Formula Copy -->
             <p class="mt-4 text-xs text-cyan-300 text-center">
-                <span class="font-semibold text-cyan-200">Calculation:</span> (Kcal per 100g × Portion Limit) &div; 100 (Rounded)
+                <span class="font-semibold text-cyan-200">Formula:</span> (Nutrient per 100g × Limit) &div; 100 (Rounded)
             </p>
         </div>
     </div>
 
     <script>
         /**
-         * Calculates the total calories based on Kcal per 100g and the Safe Limit in grams.
-         * Formula: Calories = (Kcal per 100g * Safe Limit (g)) / 100
-         * The result is rounded to the nearest whole number.
+         * Calculates the total calories and protein based on per 100g values and the Safe Limit in grams.
+         * Formula: Result = (Nutrient per 100g * Safe Limit (g)) / 100 (Rounded)
          */
-        function calculateCalories() {
+        function calculateNutrition() {
             const kcalPer100gInput = document.getElementById('kcalPer100g');
+            const proteinPer100gInput = document.getElementById('proteinPer100g');
             const safeLimitGramsInput = document.getElementById('safeLimitGrams');
-            const outputElement = document.getElementById('outputCalories');
+            
+            const outputCaloriesElement = document.getElementById('outputCalories');
+            const outputProteinElement = document.getElementById('outputProtein');
 
             // Get numerical values, defaulting to 0 if input is empty or invalid
             const kcalPer100g = parseFloat(kcalPer100gInput.value) || 0;
+            const proteinPer100g = parseFloat(proteinPer100gInput.value) || 0;
             const safeLimitGrams = parseFloat(safeLimitGramsInput.value) || 0;
 
             // Ensure inputs are non-negative
-            if (kcalPer100g < 0 || safeLimitGrams < 0) {
+            if (kcalPer100g < 0 || proteinPer100g < 0 || safeLimitGrams < 0) {
                 // Display error 
-                outputElement.textContent = "Error"; 
+                outputCaloriesElement.textContent = "Error";
+                outputProteinElement.textContent = "Error"; 
                 console.error("Input values must be non-negative.");
             } else {
-                // Perform the calculation
+                // 1. Calculate Calories (Rounded to nearest whole number)
                 const rawCalories = (kcalPer100g * safeLimitGrams) / 100;
+                const formattedCalories = Math.round(rawCalories).toString();
 
-                // Round to the nearest whole number (removing decimals as requested)
-                const formattedResult = Math.round(rawCalories).toString();
+                // 2. Calculate Protein (Rounded to one decimal place for precision)
+                const rawProtein = (proteinPer100g * safeLimitGrams) / 100;
+                const formattedProtein = rawProtein.toFixed(1);
 
                 // Update the UI
-                outputElement.textContent = formattedResult;
+                outputCaloriesElement.textContent = formattedCalories;
+                outputProteinElement.textContent = formattedProtein;
             }
         }
 
         // Run the calculation once on page load to display initial values
         window.onload = function() {
-            calculateCalories();
+            calculateNutrition();
         };
 
         // Standard boilerplate for API interaction with retries (kept for reference)
