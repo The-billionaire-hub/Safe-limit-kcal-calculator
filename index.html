@@ -4,42 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kcal & Protein Limit Calculator</title>
-    <!-- Load Tailwind CSS -->
+    <!-- Load Tailwind CSS and configure custom brand colors -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Custom styles for a premium, non-Tailwind component feel */
-        .calculator-card {
-            /* Extremely subtle, diffused shadow for a high-end floating look */
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+    <script>
+        // Define the standard four-color palette
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-green': '#0F3D2E',      // Primary Green (Page BG, Accents)
+                        'brand-charcoal': '#1C1C1C',   // Authority Charcoal (Card BG, Input Text)
+                        'brand-ivory': '#F6F3EE',      // Background Ivory (Card Text, Input BG)
+                        'brand-teal': '#0E6F6D',       // Performance Teal (Highlights, Results)
+                    },
+                },
+            },
         }
-
+    </script>
+    <style>
+        /*
+        Design Logic: Dark Card (Charcoal) on Green Background (Matching todo_list.html)
+        Inputs use Ivory BG, Charcoal Text, and Teal focus border.
+        */
         .premium-input {
-            /* Input fields remain bright white for readability */
-            background-color: white;
-            border: 1px solid #e5e7eb;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+            /* Input fields match the look of the input in the Task Manager */
+            background-color: #F6F3EE;
+            color: #1C1C1C; 
+            border: 2px solid transparent;
             transition: all 0.2s ease-in-out;
         }
         .premium-input:focus {
-            /* Focus color shifted to match the bright emerald accent */
-            border-color: #34d399; /* Emerald-400 focus ring */
-            box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.4);
+            /* Focus state matches Task Manager input focus */
+            border-color: #0E6F6D; /* Use Teal for focus border */
+            box-shadow: 0 0 0 3px rgba(14, 111, 109, 0.5); /* Soft teal glow */
             outline: none;
         }
     </style>
 </head>
-<!-- Background: Vibrant Orange (bg-orange-600) to match the image -->
-<body class="bg-orange-100 min-h-screen flex items-center justify-center p-4 font-sans">
+<!-- Page Background: Primary Green (#0F3D2E) -->
+<body class="bg-brand-green min-h-screen flex items-center justify-center p-4 font-sans">
 
-    <!-- Card: Deep Cyan Blue (bg-cyan-900) to match the image -->
-    <div id="calculator-card" class="calculator-card bg-cyan-900 rounded-3xl w-full max-w-md p-7 sm:p-10">
+    <!-- Card: Authority Charcoal (#1C1C1C) | Styling matches todo_list.html card -->
+    <div id="calculator-card" class="bg-brand-charcoal rounded-xl shadow-2xl w-full max-w-md p-6 sm:p-8">
 
-        <!-- Heading: White and Formal -->
-        <h1 class="text-4xl font-extrabold text-white mb-2 text-center tracking-tight">
+        <!-- Heading: Background Ivory (#F6F3EE) | Serif Typography -->
+        <h1 class="text-4xl font-serif font-bold text-brand-ivory mb-2 text-center tracking-tight">
             Food Nutrition Calculator
         </h1>
-        <p class="text-sm font-semibold text-cyan-300 mb-8 text-center">
+        <!-- Subheading: Performance Teal (#0E6F6D) -->
+        <p class="text-sm font-semibold text-brand-teal mb-8 text-center">
             Daily Portion & Nutrient Breakdown
         </p>
 
@@ -48,7 +61,8 @@
             
             <!-- Kcal per 100g Input -->
             <div>
-                <label for="kcalPer100g" class="block text-sm font-semibold text-gray-100 mb-2">
+                <!-- Label: Background Ivory (#F6F3EE) -->
+                <label for="kcalPer100g" class="block text-sm font-semibold text-brand-ivory mb-2">
                     Kcal per 100g
                 </label>
                 <div class="relative">
@@ -58,18 +72,20 @@
                         placeholder="e.g., 550"
                         value="550"
                         min="0"
-                        class="premium-input w-full p-4 pr-16 text-lg rounded-xl text-gray-800 placeholder-gray-400"
+                        class="premium-input w-full p-4 pr-16 text-lg rounded-lg placeholder-brand-charcoal/70"
                         oninput="calculateNutrition()"
                     >
-                    <span class="absolute right-0 top-0 h-full flex items-center pr-4 text-gray-500 text-sm font-medium">
+                    <!-- Suffix: Background Ivory (#F6F3EE) -->
+                    <span class="absolute right-0 top-0 h-full flex items-center pr-4 text-brand-ivory text-sm font-medium">
                         Kcal/100g
                     </span>
                 </div>
             </div>
 
-            <!-- NEW: Protein per 100g Input -->
+            <!-- Protein per 100g Input -->
             <div>
-                <label for="proteinPer100g" class="block text-sm font-semibold text-gray-100 mb-2">
+                <!-- Label: Background Ivory (#F6F3EE) -->
+                <label for="proteinPer100g" class="block text-sm font-semibold text-brand-ivory mb-2">
                     Protein per 100g (g)
                 </label>
                 <div class="relative">
@@ -79,10 +95,11 @@
                         placeholder="e.g., 25"
                         value="25"
                         min="0"
-                        class="premium-input w-full p-4 pr-16 text-lg rounded-xl text-gray-800 placeholder-gray-400"
+                        class="premium-input w-full p-4 pr-16 text-lg rounded-lg placeholder-brand-charcoal/70"
                         oninput="calculateNutrition()"
                     >
-                    <span class="absolute right-0 top-0 h-full flex items-center pr-4 text-gray-500 text-sm font-medium">
+                    <!-- Suffix: Background Ivory (#F6F3EE) -->
+                    <span class="absolute right-0 top-0 h-full flex items-center pr-4 text-brand-ivory text-sm font-medium">
                         grams (g)
                     </span>
                 </div>
@@ -90,7 +107,8 @@
 
             <!-- Daily Safe Limit Input -->
             <div>
-                <label for="safeLimitGrams" class="block text-sm font-semibold text-gray-100 mb-2">
+                <!-- Label: Background Ivory (#F6F3EE) -->
+                <label for="safeLimitGrams" class="block text-sm font-semibold text-brand-ivory mb-2">
                     Daily Portion Limit (g)
                 </label>
                 <div class="relative">
@@ -100,10 +118,11 @@
                         placeholder="e.g., 30"
                         value="30"
                         min="0"
-                        class="premium-input w-full p-4 pr-16 text-lg rounded-xl text-gray-800 placeholder-gray-400"
+                        class="premium-input w-full p-4 pr-16 text-lg rounded-lg placeholder-brand-charcoal/70"
                         oninput="calculateNutrition()"
                     >
-                    <span class="absolute right-0 top-0 h-full flex items-center pr-4 text-gray-500 text-sm font-medium">
+                    <!-- Suffix: Background Ivory (#F6F3EE) -->
+                    <span class="absolute right-0 top-0 h-full flex items-center pr-4 text-brand-ivory text-sm font-medium">
                         grams (g)
                     </span>
                 </div>
@@ -113,7 +132,8 @@
 
         <!-- Output Field Container -->
         <div class="mt-10">
-            <h2 class="text-xl font-semibold text-gray-200 mb-3 border-t border-cyan-700 pt-6">
+            <!-- Separator: Primary Green (#0F3D2E) | Heading: Background Ivory (#F6F3EE) -->
+            <h2 class="text-xl font-sans font-semibold text-brand-ivory mb-3 border-t border-brand-green pt-6">
                 Nutrition Breakdown
             </h2>
             
@@ -121,31 +141,35 @@
             <div class="grid grid-cols-2 gap-4">
                 
                 <!-- Output 1: Calories -->
-                <div class="bg-white p-4 rounded-xl flex flex-col items-center justify-center border border-cyan-700">
-                    <span class="text-xs font-semibold text-gray-600 mb-1">
+                <!-- Result boxes use Primary Green BG, providing contrast on the dark card -->
+                <div class="bg-brand-green p-4 rounded-lg flex flex-col items-center justify-center min-h-[120px] shadow-lg">
+                    <!-- Label: Background Ivory (#F6F3EE) -->
+                    <span class="text-xs font-semibold text-brand-ivory mb-2">
                         Estimated Calories
                     </span>
-                    <!-- Result: Bright Emerald Green/Teal -->
-                    <span id="outputCalories" class="text-3xl sm:text-4xl font-extrabold text-emerald-400">
+                    <!-- Result: Performance Teal (#0E6F6D) | Serif font -->
+                    <span id="outputCalories" class="text-3xl sm:text-4xl font-serif font-extrabold text-brand-teal">
                         0
                     </span>
                 </div>
 
-                <!-- NEW Output 2: Protein -->
-                <div class="bg-white p-4 rounded-xl flex flex-col items-center justify-center border border-cyan-700">
-                    <span class="text-xs font-semibold text-gray-600 mb-1">
+                <!-- Output 2: Protein -->
+                <!-- Result boxes use Primary Green BG -->
+                <div class="bg-brand-green p-4 rounded-lg flex flex-col items-center justify-center min-h-[120px] shadow-lg">
+                    <!-- Label: Background Ivory (#F6F3EE) -->
+                    <span class="text-xs font-semibold text-brand-ivory mb-2">
                         Estimated Protein (g)
                     </span>
-                    <!-- Result: Bright Emerald Green/Teal -->
-                    <span id="outputProtein" class="text-3xl sm:text-4xl font-extrabold text-emerald-400">
+                    <!-- Result: Performance Teal (#0E6F6D) | Serif font -->
+                    <span id="outputProtein" class="text-3xl sm:text-4xl font-serif font-extrabold text-brand-teal">
                         0
                     </span>
                 </div>
             </div>
 
-            <!-- Formula Copy -->
-            <p class="mt-4 text-xs text-cyan-300 text-center">
-                <span class="font-semibold text-cyan-200">Formula:</span> (Nutrient per 100g × Limit) &div; 100 (Rounded)
+            <!-- Formula Copy: Background Ivory (#F6F3EE) -->
+            <p class="mt-4 text-xs text-brand-ivory text-center">
+                <span class="font-semibold text-brand-ivory">Formula:</span> (Nutrient per 100g $\times$ Limit) $\div$ 100 (Rounded)
             </p>
         </div>
     </div>
@@ -179,7 +203,7 @@
                 const rawCalories = (kcalPer100g * safeLimitGrams) / 100;
                 const formattedCalories = Math.round(rawCalories).toString();
 
-                // 2. Calculate Protein (Rounded to one decimal place for precision)
+                // 2. Calculate Protein (Rounded to one decimal place for precision). toFixed(1) ensures a decimal place is always shown (e.g., 5.0) for visual stability.
                 const rawProtein = (proteinPer100g * safeLimitGrams) / 100;
                 const formattedProtein = rawProtein.toFixed(1);
 
@@ -212,6 +236,3 @@
     </script>
 </body>
 </html>
-
-
-
